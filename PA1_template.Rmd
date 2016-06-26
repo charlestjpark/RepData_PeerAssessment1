@@ -6,7 +6,7 @@ The first section assumes that you are in the local directory corresponding to t
 contains an activity.zip folder housing the activity.csv file. This section of code unzips that folder and extracts the activity.csv
 file into the same working directory in which this Rmd file is found. It then loads this data into a data frame named "data". 
 It also loads in R libraries that will be used for data pre-processing. 
-```{r}
+```{r, echo=TRUE}
 unzip(zipfile = "./activity.zip", exdir = ".")
 data <- read.csv("activity.csv")
 library(dplyr)
@@ -18,7 +18,7 @@ library(lattice)
 ## What is mean total number of steps taken per day?
 In this section, we can remove the NA values from the step attribute. AFterwards, summarise the data by reporting the total 
 number of steps taken each day, then ensure data1 is reported as a data frame prior to plotting histogram of total daily steps. 
-```{r}
+```{r, echo=TRUE}
 data1 <- data[!is.na(data$steps),]
 data1 <- data1 %>% group_by(date) %>%
          summarise(sum(steps)) 
@@ -27,7 +27,7 @@ data1 <- rename(data1, steps = sum.steps.)
 ```
 
 Afterwards, we plot a histogram of the total number of steps taken each day. 
-```{r}
+```{r, fig.path = 'figure/1-Frequency Distribution without Missing Values', label = 'Frequency Distribution of Number of Daily Steps', echo=TRUE}
 hist(data1$steps,
      col = "blue",
      main = "Frequency Distribution of Number of Daily Steps",
@@ -36,7 +36,7 @@ hist(data1$steps,
 ```
 
 We also want to calculate and report the mean and median total number of steps taken per day. 
-```{r}
+```{r, echo=TRUE}
 mean <- mean(data1$steps)
 median <- median(data1$steps) 
 
@@ -50,7 +50,7 @@ median
 In this section, we make a time series plot of the 5-minute interval (x-axis) and the average number
 of steps taken, averaged across all days (y-axis). Similar to the previous section, the NA values are not yet considered. 
 
-```{r}
+```{r, fig.path = 'figure/2-Line Plot of Average Steps without Missing Values', echo=TRUE}
 data2 <- data[!is.na(data$steps),]
 data2 <- data2 %>% group_by(interval) %>%
          summarise(mean = mean(steps))
@@ -64,7 +64,7 @@ plot(data2, type = "l",
 The next section points out the 5-minute interval, on average across all the days in the data set, which 
 contains the maximum number of steps. This value is stored in the variable called max_interval. 
 
-```{r}
+```{r, echo=TRUE}
 max_interval <- data2$interval[which(data2$mean == max(data2$mean))]
 
 max_interval
@@ -73,7 +73,7 @@ max_interval
 ## Imputing missing values
 
 This section calculates and reports the total number of missing values in the data set. 
-```{r}
+```{r, echo=TRUE}
 n_missing <- sum(is.na(data$steps))
 
 n_missing 
@@ -81,7 +81,7 @@ n_missing
 
 These missing values were imputed as the mean number of steps for that interval across all the days, then
 another data set was developed by including these imputations, stored into data frame called data3. 
-```{r}
+```{r, echo=TRUE}
 data3 <- sqldf('SELECT data.steps as steps, data.date as date, data.interval as interval, data2.mean as mean
                FROM data LEFT JOIN data2 ON data.interval = data2.interval')
 data3 <- data3 %>% 
@@ -91,7 +91,7 @@ data3 <- data3 %>%
 
 Based on the new data frame, we repeat the process of grouping by date and generating another histogram to profile the 
 frequency of total number of steps taken each day.  
-```{r}
+```{r, fig.path = 'figure/3-Frequency Distribution with Imputations', echo=TRUE}
 data4 <- data3 %>% group_by(date) %>%
          summarise(sum(steps))
 data4 <- data.frame(data4)
@@ -105,7 +105,7 @@ hist(data4$steps,
 ```
 
 Similar to the previous sections, we again want to calculate and report the mean and median total number of steps taken per day. 
-```{r}
+```{r, echo=TRUE}
 mean <- mean(data4$steps)
 median <- median(data4$steps) 
 
@@ -124,7 +124,7 @@ is a weekday or a weekend. This is done by first creating another column that en
 the week. Since there's no in-built function, to my knowledge, of further encoding into Weekday and Weekend class, I will set up a 
 dataframe that can be joined with the original data. 
 
-```{r}
+```{r, echo=TRUE}
 data5 <-  data3
 data5$date <- ymd(as.character(data5$date))
 data5 <- data5 %>% mutate(dayname = weekdays(data5$date)) 
@@ -137,7 +137,7 @@ data5 <- sqldf('SELECT data5.steps as steps, data5.date as date, data5.interval 
 Given the new data set categorized by weekday or weekend, we create a panel plot containing a time series plot of the 
 5-minute interval (x-axis) and the average number of steps taken, averaged across all weekdays or weekend days. 
 
-```{r}
+```{r, fig.path = 'figure/4-Comparison of Average Steps by Interval between Weekday and Weekend', echo=TRUE}
 data5 <- data5 %>% group_by(daytype, interval) %>%
          summarise(mean = mean(steps))
 data5 <- data.frame(data5)
@@ -146,7 +146,7 @@ xyplot(mean ~ interval | daytype, data = data5, layout = c(1, 2), type = "l",
        ylab = 'Number of steps',
        xlab = 'Interval',
        main = 'Average Number of Steps by Interval for Weekend and Weekday')
-
-
 ```
 
+The panel plots indicate that there is more activity going on during the weekend, especially during intervals 1000 to 1500. 
+This may be because during the weekdays, people are working and typical workdays are fairly sedentary in front of the computer. 
