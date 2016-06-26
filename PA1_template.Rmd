@@ -27,7 +27,7 @@ data1 <- rename(data1, steps = sum.steps.)
 ```
 
 Afterwards, we plot a histogram of the total number of steps taken each day. 
-```{r, label = 'Frequency Distribution of Number of Daily Steps', echo=TRUE}
+```{r, label = '1-Frequency Distribution without Missing Values', echo=TRUE}
 hist(data1$steps,
      col = "blue",
      main = "Frequency Distribution of Number of Daily Steps",
@@ -50,7 +50,7 @@ median
 In this section, we make a time series plot of the 5-minute interval (x-axis) and the average number
 of steps taken, averaged across all days (y-axis). Similar to the previous section, the NA values are not yet considered. 
 
-```{r, echo=TRUE}
+```{r, label = '2-Line Plot of Average Steps without Missing Values', echo=TRUE}
 data2 <- data[!is.na(data$steps),]
 data2 <- data2 %>% group_by(interval) %>%
          summarise(mean = mean(steps))
@@ -91,7 +91,7 @@ data3 <- data3 %>%
 
 Based on the new data frame, we repeat the process of grouping by date and generating another histogram to profile the 
 frequency of total number of steps taken each day.  
-```{r, echo=TRUE}
+```{r, label = '3-Frequency Distribution with Imputations', echo=TRUE}
 data4 <- data3 %>% group_by(date) %>%
          summarise(sum(steps))
 data4 <- data.frame(data4)
@@ -137,7 +137,7 @@ data5 <- sqldf('SELECT data5.steps as steps, data5.date as date, data5.interval 
 Given the new data set categorized by weekday or weekend, we create a panel plot containing a time series plot of the 
 5-minute interval (x-axis) and the average number of steps taken, averaged across all weekdays or weekend days. 
 
-```{r, echo=TRUE}
+```{r, label = '4-Comparison of Average Steps by Interval between Weekday and Weekend', echo=TRUE}
 data5 <- data5 %>% group_by(daytype, interval) %>%
          summarise(mean = mean(steps))
 data5 <- data.frame(data5)

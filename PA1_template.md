@@ -38,7 +38,7 @@ hist(data1$steps,
      ylab = "Number of Days")
 ```
 
-![plot of chunk Frequency Distribution of Number of Daily Steps](figure/1-Frequency Distribution without Missing ValuesFrequency Distribution of Number of Daily Steps-1.png)
+![plot of chunk 1-Frequency Distribution without Missing Values](figure/1-Frequency Distribution without Missing Values-1.png)
 
 We also want to calculate and report the mean and median total number of steps taken per day. 
 
@@ -78,7 +78,7 @@ plot(data2, type = "l",
      xlab = "Interval")
 ```
 
-![plot of chunk unnamed-chunk-4](figure/2-Line Plot of Average Steps without Missing Valuesunnamed-chunk-4-1.png)
+![plot of chunk 2-Line Plot of Average Steps without Missing Values](figure/2-Line Plot of Average Steps without Missing Values-1.png)
 
 The next section points out the 5-minute interval, on average across all the days in the data set, which 
 contains the maximum number of steps. This value is stored in the variable called max_interval. 
@@ -135,7 +135,7 @@ hist(data4$steps,
      ylab = "Number of Days")
 ```
 
-![plot of chunk unnamed-chunk-8](figure/3-Frequency Distribution with Imputationsunnamed-chunk-8-1.png)
+![plot of chunk 3-Frequency Distribution with Imputations](figure/3-Frequency Distribution with Imputations-1.png)
 
 Similar to the previous sections, we again want to calculate and report the mean and median total number of steps taken per day. 
 
@@ -194,7 +194,6 @@ xyplot(mean ~ interval | daytype, data = data5, layout = c(1, 2), type = "l",
        main = 'Average Number of Steps by Interval for Weekend and Weekday')
 ```
 
-![plot of chunk unnamed-chunk-11](figure/4-Comparison of Average Steps by Interval between Weekday and Weekendunnamed-chunk-11-1.png)
+![plot of chunk 4-Comparison of Average Steps by Interval between Weekday and Weekend](figure/4-Comparison of Average Steps by Interval between Weekday and Weekend-1.png)
 
-The panel plots indicate that there is more activity going on during the weekend, especially during intervals 1000 to 1500. 
-This may be because during the weekdays, people are working and typical workdays are fairly sedentary in front of the computer. 
+The panel plots indicate that there is more activity going on during the weekend, especially during intervals 1000 to 1500. This may be because during the weekdays, people are working and typical workdays are fairly sedentary in front of the computer. 
